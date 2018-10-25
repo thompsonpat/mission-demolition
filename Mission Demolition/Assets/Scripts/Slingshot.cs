@@ -8,7 +8,8 @@ public class Slingshot : MonoBehaviour
 
     [Header("Set in Inspector")]
     public GameObject prefabProjectile;
-    public float velocityMult = 10f;
+    public float velocityMult = 15f;
+    public float speedModifier = 1.25f;
 
     [Header("Set Dynamically")]
     public GameObject launchPoint;
@@ -74,9 +75,11 @@ public class Slingshot : MonoBehaviour
             // The mouse has been released
             aimingMode = false;
             projectileRigidbody.isKinematic = false;
-            projectileRigidbody.velocity = -mouseDelta * velocityMult;
+            projectileRigidbody.velocity = -mouseDelta * velocityMult * speedModifier;
             FollowCam.POI = projectile;
             projectile = null;
+            MissionDemolition.ShotFired();
+            ProjectileLine.S.poi = projectile;
         }
 
     }
