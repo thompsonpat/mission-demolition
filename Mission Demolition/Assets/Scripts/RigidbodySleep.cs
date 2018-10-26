@@ -10,7 +10,7 @@ public class RigidbodySleep : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        int massChange = 50;
+        int massChange = 10;
         Rigidbody rb = GetComponent<Rigidbody>();
 
         Material weakMaterial = Resources.Load("Mat_Glass", typeof(Material)) as Material;

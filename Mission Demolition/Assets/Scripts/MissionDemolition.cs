@@ -18,6 +18,7 @@ public class MissionDemolition : MonoBehaviour
     [Header("Set In Inspector")]
     public Text uitLevel;
     public Text uitShots;
+    public Text uitHighScore;
     public Text uitButtons;
 
     public Vector3 castlePos;       // The place to put castles
@@ -27,6 +28,7 @@ public class MissionDemolition : MonoBehaviour
     public int level;
     public int levelMax;
     public int shotsTaken;
+    public int highScore;
     public GameObject castle;
     public GameMode mode = GameMode.idle;
     public string showing = "Show Slingshot";
@@ -58,6 +60,18 @@ public class MissionDemolition : MonoBehaviour
         castle.transform.position = castlePos;
         shotsTaken = 0;
 
+        // If the PlayerPrefs HighScore already exists, read it
+        if (PlayerPrefs.HasKey("HighScore" + level))
+        {
+            highScore = PlayerPrefs.GetInt("HighScore" + level);
+        }
+
+        else
+        {
+            // Assign the high score to HighScore
+            PlayerPrefs.SetInt("HighScore" + level, value: 100);
+        }
+
         // Reset the camera
         SwitchView("Show Both");
         ProjectileLine.S.Clear();
@@ -75,12 +89,17 @@ public class MissionDemolition : MonoBehaviour
         // Show the data in the GUITexts
         uitLevel.text = "Level: " + (level + 1) + " of " + levelMax;
         uitShots.text = "Shots Taken: " + shotsTaken;
+        if (highScore == 100) {
+            uitHighScore.text = "High Score: ";
+        } else {
+            uitHighScore.text = "High Score: " + highScore;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-		UpdateGUI();
+        UpdateGUI();
 
         // Check for level end
         if ((mode == GameMode.playing) && (Goal.goalMet))
@@ -92,6 +111,11 @@ public class MissionDemolition : MonoBehaviour
             SwitchView("Show Both");
 
             // Start the next level in 2 seconds
+            // Update the PlayerPrefs HighScore if necessary
+            if (shotsTaken < PlayerPrefs.GetInt("HighScore" + level))
+            {
+                PlayerPrefs.SetInt("HighScore" + level, shotsTaken);
+            }
             Invoke("NextLevel", 2f);
         }
     }
